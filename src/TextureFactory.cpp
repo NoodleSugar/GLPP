@@ -1,40 +1,29 @@
 #include <GLPP/TextureFactory.hpp>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb/stb_image.h>
-
-namespace glpp
+namespace glpp::TextureFactory
 {
-Texture2D TextureFactory::fromFile(const char* filePath) noexcept(false)
-{
-	GLsizei		   width, height;
-	unsigned char* data = stbi_load(filePath, &width, &height, nullptr, 0);
-
-	if(!data)
-		throw TextureLoadException(filePath);
-
-	Texture2D texture(TextureInternalFormat::RGB,
-					  PixelDataFormat::RGB,
-					  PixelDataType::UnsignedByte,
-					  width, height, data);
-
-	stbi_image_free(data);
-
-	return texture;
-}
 
 // TODO vérifier fonctionnement de ces méthodes avec les framebuffers...
 
-Texture2D TextureFactory::createColorTexture(int width, int height)
+Texture2D createColorTexture(int width, int height, unsigned char* data)
 {
 	return Texture2D(
 	 TextureInternalFormat::RGB,
 	 PixelDataFormat::RGB,
 	 PixelDataType::UnsignedByte,
-	 width, height, nullptr, 0);
+	 width, height, data, 0);
 }
 
-Texture2D TextureFactory::createDepthTexture(int width, int height)
+Texture2D createAlphaColorTexture(int width, int height, unsigned char* data)
+{
+	return Texture2D(
+	 TextureInternalFormat::RGBA,
+	 PixelDataFormat::RGBA,
+	 PixelDataType::UnsignedByte,
+	 width, height, data, 0);
+}
+
+Texture2D createDepthTexture(int width, int height)
 {
 	return Texture2D(
 	 TextureInternalFormat::Depth,
@@ -43,7 +32,7 @@ Texture2D TextureFactory::createDepthTexture(int width, int height)
 	 width, height, nullptr, 0);
 }
 
-Texture2D TextureFactory::createStencilTexture(int width, int height)
+Texture2D createStencilTexture(int width, int height)
 {
 	return Texture2D(
 	 TextureInternalFormat::RGB,
@@ -52,7 +41,7 @@ Texture2D TextureFactory::createStencilTexture(int width, int height)
 	 width, height, nullptr, 0);
 }
 
-Texture2D TextureFactory::createDepthAndStencilTexture(int width, int height)
+Texture2D createDepthAndStencilTexture(int width, int height)
 {
 	return Texture2D(
 	 TextureInternalFormat::DepthStencil,
@@ -61,4 +50,4 @@ Texture2D TextureFactory::createDepthAndStencilTexture(int width, int height)
 	 width, height, nullptr, 0);
 }
 
-} // namespace glpp
+} // namespace glpp::TextureFactory

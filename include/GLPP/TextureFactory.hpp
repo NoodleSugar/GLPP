@@ -4,20 +4,17 @@
 
 #include <glad/glad.h>
 
-namespace glpp
+namespace glpp::TextureFactory
 {
-class TextureFactory
-{
-public:
-	static Texture2D fromFile(const char* filePath) noexcept(false);
 
-	static Texture2D createColorTexture(int width, int height);
+Texture2D createColorTexture(int width, int height, unsigned char* data = nullptr);
 
-	static Texture2D createDepthTexture(int width, int height);
+Texture2D createAlphaColorTexture(int width, int height, unsigned char* data = nullptr);
 
-	static Texture2D createStencilTexture(int width, int height);
+Texture2D createDepthTexture(int width, int height);
 
-	static Texture2D createDepthAndStencilTexture(int width, int height);
-};
+Texture2D createStencilTexture(int width, int height);
 
-} // namespace glpp
+Texture2D createDepthAndStencilTexture(int width, int height);
+
+} // namespace glpp::TextureFactory

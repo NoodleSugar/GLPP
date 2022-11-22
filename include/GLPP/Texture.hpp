@@ -79,22 +79,6 @@ enum class PixelDataType
 	UnsignedInt24_8			 = GL_UNSIGNED_INT_24_8
 };
 
-class TextureLoadException : public std::exception
-{
-public:
-	explicit TextureLoadException(const char* filePath) :
-		m_filePath(filePath) {}
-	~TextureLoadException() noexcept = default;
-
-	const char* what() const noexcept override
-	{
-		return (std::string("Failed to load : ") + m_filePath).c_str();
-	}
-
-private:
-	std::string m_filePath;
-};
-
 // TODO Faire classe template avec TextureTarget
 template<TextureTarget T>
 class Texture : public Object
@@ -122,12 +106,6 @@ public:
 	void bind() const;
 
 	static void unbind();
-
-	static Texture fromFile(const char*) noexcept(false);
-	static Texture createColorTexture(int width, int height);
-	static Texture createDepthTexture(int width, int height);
-	static Texture createStencilTexture(int width, int height);
-	static Texture createDepthAndStencilTexture(int width, int height);
 
 private:
 	static constexpr GLenum TEXTURE_TARGET = (GLenum)T;

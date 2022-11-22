@@ -34,15 +34,22 @@ enum class FrameBufferClearTarget
 
 class FrameBuffer : public Object
 {
+private:
+	FrameBuffer(int id) :
+		Object(id) {}
+
 public:
 	FrameBuffer() { glGenFramebuffers(1, &m_id); }
 
 	~FrameBuffer() { glDeleteFramebuffers(1, &m_id); }
 
-	void bind(FrameBufferTarget target = FrameBufferTarget::ReadAndDraw) { glBindFramebuffer((GLenum)target, m_id); }
+	void bind(FrameBufferTarget target = FrameBufferTarget::ReadAndDraw) const
+	{
+		glBindFramebuffer((GLenum)target, m_id);
+	}
 
 	template<TextureTarget T>
-	void attachTexture(FrameBufferTarget target, FrameBufferAttachment attachement, const Texture<T>& texture)
+	void attachTexture(FrameBufferTarget target, FrameBufferAttachment attachement, const Texture<T>& texture) const
 	{
 		glFramebufferTexture2D((GLenum)target, (GLenum)attachement, (GLenum)T, texture.getId(), 0);
 	}
@@ -51,6 +58,12 @@ public:
 
 	static void setClearColor(float r, float g, float b, float a) { glClearColor(r, g, b, a); }
 	static void clear(FrameBufferClearTarget type) { glClear(static_cast<GLbitfield>(type)); }
+
+	static const FrameBuffer& getDefaultFrameBuffer()
+	{
+		static const FrameBuffer buffer(0);
+		return buffer;
+	}
 };
 
 } // namespace glpp
